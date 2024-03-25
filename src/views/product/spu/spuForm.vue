@@ -20,7 +20,7 @@
                  action:上传图片的接口地址
                  list-type:文件列表的类型
             -->
-            <el-upload v-model:file-list="imgList" action="/api/admin/product/fileUpload" list-type="picture-card"
+            <el-upload v-model="imgList" action="/api/admin/product/fileUpload" list-type="picture-card"
                 :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :before-upload="handlerUpload">
                 <el-icon>
                     <Plus />
@@ -43,7 +43,7 @@
                 <el-table-column label="销售属性名字" width="120px" prop="saleAttrName"></el-table-column>
                 <el-table-column label="销售属性值">
                     <!-- row:销售属性对象 -->
-                    <template #="{row,$index}">
+                    <template #="{row}">
                         <el-tag @close="row.spuSaleAttrValueList.splice(index,1)" style="margin:0 5px" v-for="(item,index) in row.spuSaleAttrValueList" :key="index" closable>
                              {{ item.saleAttrValueName }}
                         </el-tag>
@@ -54,7 +54,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="120px">
-                    <template #="{row,$index}">
+                    <template #="{$index}">
                         <el-button type="primary" size="small" icon="Delete" @click="saleAttr.splice($index,1)"></el-button>
                     </template>
 
@@ -75,7 +75,7 @@
 </template>
 
 <script lang="ts" setup>
-import { type SpuData,type AllTradeMark, type SpuHasImg, type SaleAttrResponseData, type HasSaleAttrResponseData, type TradeMark, type SpuImg, type SaleAttr, HasSaleAttr } from '@/api/product/spu/type';
+import type { SpuData,SaleAttrValue, HasSaleAttr, SaleAttr, SpuImg, TradeMark, AllTradeMark, SpuHasImg, SaleAttrResponseData, HasSaleAttrResponseData } from '@/api/product/spu/type';
 import { reqAllSaleAttr,reqAllTradeMark,reqSpuHasSaleAttr,reqSpuImageList ,reqAddUpdateSpu} from '@/api/product/spu';
 import { ref ,computed} from 'vue';
 import { ElMessage } from 'element-plus';
@@ -95,7 +95,7 @@ let dialogImageUrl = ref<string>('')
 let dialogVisible = ref<boolean>(false)
 
 //存储已有的spu对象
-let SpuParams = ref<SpuData>({
+let SpuParams = ref<any>({
   category3Id: "",//收集三级分类的id
   spuName: "",//spu的名字
   description: "",//spu描述
@@ -213,9 +213,9 @@ const toEdit = (row:SaleAttr)=>{
 const toLook = (row: SaleAttr) => {
     //整理收集的属性的ID与属性值的名字
     const { baseSaleAttrId, saleAttrValue } = row;
-    //整理成服务器需要的属性值形式
+    //整理成服务器需要的属性值形式 
     let newSaleAttrValue: SaleAttrValue = {
-        baseSaleAttrId,
+        baseSaleAttrId:(baseSaleAttrId as number),
         saleAttrValueName: (saleAttrValue as string)
     }
 
@@ -251,14 +251,14 @@ const toLook = (row: SaleAttr) => {
 const save = async ()=>{
     //整理参数
     //1.照片墙的数据
-    SpuParams.value.spuImageList = imgList.value.map((item:any)=>{
-        return{
-            imgName:item.name,
-            imgUrl:(item.response && item.response.data) || item.url
+    SpuParams.value.spuImageList = imgList.value.map((item: any) => {
+        return {
+            imgName: item.name,//图片的名字
+            imgUrl: (item.response && item.response.data) || item.url
         }
-    })
-    //整理销售属性的数据
-    SpuParams.value.spuSaleAttrList = saleAttr.value
+    });
+    //2:整理销售属性的数据
+    SpuParams.value.spuSaleAttrList = saleAttr.value;
     //发请求：添加spu|更新已有的spu
    let res =  await reqAddUpdateSpu(SpuParams.value)
     //成功

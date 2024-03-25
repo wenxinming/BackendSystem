@@ -16,7 +16,7 @@ let useCategroyStore = defineStore('Category',{
     },
     actions:{
         async getC1(){
-            let res:CategoryResponseDate = await reqC1()
+            let res:CategoryResponseData = await reqC1()
             if(res.code == 200){
                 this.c1Arr = res.data
             }

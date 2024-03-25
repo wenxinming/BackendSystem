@@ -21,7 +21,7 @@
             <el-table-column label="更新时间" align="center" prop="updateTime" show-overflow-tooltip></el-table-column>
             <el-table-column label="操作" width="280px" align="center">
                 <!-- row:已有职位对象 -->
-                <template #="{ row, $index }">
+                <template #="{ row}">
                     <el-button type="primary" size="small" @click="setPermission(row)" icon="User">分配权限</el-button>
                     <el-button type="primary" size="small" @click="updateRole(row)" icon="Edit">编辑</el-button>
                     <el-popconfirm @confirm="removeRole(row.id)" :title="`你确定要删除${row.roleName}吗？`" width="260px">
@@ -119,6 +119,7 @@ const validatorRoleName = (rule: any, value: any, callback: any) => {
     } else {
         callback(new Error('职位名称至少两位'))
     }
+    if(false)console.log(rule)
 }
 
 //职位校验规则

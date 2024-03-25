@@ -155,6 +155,7 @@ const validatorUsername = (rule: any, value: any, callBack: any) => {
     } else {
         callBack(new Error('用户名字至少五位'))
     }
+    if(false)console.log(rule)
 }
 const validatorname = (rule: any, value: any, callBack: any) => {
     //用户名字|昵称,长度至少五位
@@ -163,6 +164,7 @@ const validatorname = (rule: any, value: any, callBack: any) => {
     } else {
         callBack(new Error('用户名字至少三位'))
     }
+    if(false)console.log(rule)
 }
 const validatorPassword = (rule: any, value: any, callBack: any) => {
     //用户名字|昵称,长度至少五位
@@ -171,6 +173,7 @@ const validatorPassword = (rule: any, value: any, callBack: any) => {
     } else {
         callBack(new Error('用户名字至少六位'))
     }
+    if(false)console.log(rule)
 }
 //表单校验的规则对象
 const rules = {

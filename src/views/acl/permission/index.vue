@@ -5,7 +5,7 @@
         <el-table-column label="修改时间" prop="updateTime"></el-table-column>
         <el-table-column label="操作">
             <!-- row：按钮对象数据（菜单对象） -->
-            <template #="{ row, $index }">
+            <template #="{ row}">
                 <el-button :disabled="(row.level == 4)" type="primary" size="small" @click="addPermission(row)">{{
         row.level == 3 ?
             '添加功能' : '添加菜单' }}</el-button>
@@ -47,14 +47,14 @@ import { ref, onMounted, reactive } from 'vue'
 //引入获取菜单请求API
 import { reqAllPermission, reqAddOrUpdateMenu, reqRemoveMenu } from '@/api/acl/menu/index'
 //引入ts类型
-import type { PermissionResponseData, PermissionList, Permission, MenuParams } from '@/api/acl/menu/type'
+import type { PermissionResponseData, PermissionList, Permission,MenuParams } from '@/api/acl/menu/type'
 //存储菜单的数据
 import { ElMessage } from 'element-plus';
 let PermissionArr = ref<PermissionList>([])
 //控制对话框的显示与隐藏
 let dialogVisible = ref<boolean>(false)
 //携带的参数
-let menuData = reactive({
+let menuData = reactive<MenuParams>({
     id: 0,//ID
     code: '',//权限数值
     level: 0,//几级菜单
@@ -86,9 +86,9 @@ const addPermission = (row: Permission) => {
     //对话框显示出来
     dialogVisible.value = true
     //收集新增的菜单的level数值
-    menuData.level = row.level + 1
+    menuData.level = row.level + 1;
     //给谁新增子菜单
-    menuData.pid = row.id
+    menuData.pid = (row.id as number)
 }
 //编辑菜单按钮的回调
 const updatePermission = (row: Permission) => {
